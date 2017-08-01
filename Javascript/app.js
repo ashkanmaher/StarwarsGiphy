@@ -1,48 +1,37 @@
-var characters = ["jedis", "siths", "droids", "leia", "chewbacca", "yoda", "obiwan kenobi", "darth vader", "luke skywalker"]
+var characters = ["jedis", "siths", "droids", "leia", "chewbacca", "yoda", "obiwan kenobi", "darth vader", "luke skywalker", "mace windu"]
 
 
 
 // displayCharacterInfo function re-create the HTML to display the appropriate content
 function displayCharacterInfo() {
- //var API_KEY = 'f1188e298858494bb7d2b4962e57b2b1'
+ $(".mainDisplay").empty();
  var character = $(this).attr("data-name")
  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + character +"&api_key=f1188e298858494bb7d2b4962e57b2b1"
 
 //Creating an AJAX call for the specific character button being clicked
   $.ajax({
-  	url: queryURL,
+  	url: queryURL + "&limit=10",
   	method: 'GET'
   }).done(function(response) {
-  // Once it grabs the url, do work
-
-    console.log(response);
-   // Creating a div to hold the characer
-   var characterDiv = $("<div class='character'>");
-
-   //Storing the rating data
-   var rating = response.data.rating;
-
-   // Creating an element to have the rating displayed
-
-   var pOne = $("<p>").text("Rating: " + rating);
-
-   //Displaying the rating
-   characterDiv.append(pOne);
-
-   // grab the original URL of the image
-  var imageURL = response.data.url;
   
-    
-        
- 
 
-  //creating the image element
-  var starWarsImage = $("<img>").attr("src", imageURL);
+console.log(response.data);
+  for (i=0; i < response.data.length; i++){
+   var gif = response.data[i]
+   var gifImage = gif.images.fixed_height;
+   var gifContainer = $("<div class='item'>");
+   gifContainer.append("<p>" + gif.rating + "</p>");
+    gifContainer.append("<img src=" + gifImage.url + " height=" + gifImage.height + " width=" + gifImage.width + "/>");
 
-  //Select elemtn with id characters
-  $("#characters").prepend(starWarsImage);
+  $(".mainDisplay").append(gifContainer); 
+
+
+}
+   
+   
+
    });
-  };
+};
 
     
 
@@ -52,15 +41,15 @@ function renderButtons(){
 
 // Deleting the characters prior to adding new characters
 
-$("#character-buttons").empty();
 
+$(".character-buttons").empty();
 // Looping through array of characters
 
 for (var i = 0; i < characters.length; i++) {
 
 // dynamically generating buttons for each charater
 
-     var starWars = $("<button>");
+     var starWars = $("<button class='btn btn-primary'>");
 
      // adding class of character to our button
      starWars.addClass("character")
@@ -85,7 +74,7 @@ $("#add-character").on("click", function (event){
 
    // Adding characters from textbox to array
 
-   character.push(character);
+   characters.push(character);
 
    // calling created buttons which handles the processsing of our charaters array
 
@@ -126,4 +115,5 @@ renderButtons();
 
 
 
-console.log(characters);
+
+
